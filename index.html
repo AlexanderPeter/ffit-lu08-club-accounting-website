@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Buchhaltung erstellen – Club Accounting</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Club Accounting</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="card">
+      <nav>
+        <button id="tab-register" class="active">
+          Neue Buchhaltung erstellen
+        </button>
+        <button id="tab-login">Login</button>
+      </nav>
 
-<main class="card">
-  <h1>Neue Buchhaltung erstellen</h1>
-  <form id="projectForm">
-    <label for="project_name">Projektname:</label>
-    <input type="text" id="project_name" name="project_name" required />
+      <form id="form-register" class="active">
+        <label>Projektname:</label>
+        <input id="project_name_register" required />
+        <label>Passwort:</label>
+        <input id="password_register" type="password" required />
+        <button class="submit" type="submit">Erstellen</button>
+      </form>
 
-    <label for="password">Passwort:</label>
-    <input type="password" id="password" name="password" required />
+      <form id="form-login">
+        <label>Projektname:</label>
+        <input id="project_name_login" required />
+        <label>Passwort:</label>
+        <input id="password_login" type="password" required />
+        <button class="submit" type="submit">Login</button>
+      </form>
+    </main>
 
-    <button type="submit">Projekt anlegen</button>
-  </form>
-</main>
-
-<script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

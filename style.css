@@ -1,6 +1,7 @@
 /* Universal */
 
-* { }
+* {
+}
 
 /* By tag */
 
@@ -9,8 +10,8 @@ body {
   background: #f5f6fa;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  align-items: flex-start;
+  padding: 2rem;
 }
 
 label {
@@ -19,24 +20,57 @@ label {
 }
 
 input {
-  width: 100%;
   padding: 0.5rem;
-  margin-top: 0.25rem;
-  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 0.3rem;
 }
 
-button {
-  margin-top: 1.5rem;
-  width: 100%;
+form {
+  display: none;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+form.active {
+  display: flex;
+}
+
+nav {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+nav button {
+  flex: 1;
   padding: 0.75rem;
-  background: #0066ff;
+  border: none;
+  background: #eee;
+  color: #333;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+
+nav button:hover {
+  background: #ddd;
+}
+
+nav button.active {
+  background: #333;
+  color: white;
+}
+
+button.submit {
+  background: #007bff;
   color: white;
   border: none;
+  padding: 0.6rem;
   border-radius: 0.5rem;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-button:hover {
+button.submit:hover {
   background: #004fd6;
 }
 
@@ -47,7 +81,9 @@ button:hover {
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 320px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
 }
 
 .toast {
@@ -69,8 +105,17 @@ button:hover {
 
 .toast.show {
   opacity: 1;
+  transform: translate(-50%, -50%) translateY(0);
 }
 
-.toast.success { background: #28a745; }
-.toast.error { background: #dc3545; }
-.toast.info { background: #333; }
+.toast.success {
+  background: #28a745;
+}
+.toast.error {
+  background: #dc3545;
+}
+.toast.info {
+  background: #333;
+}
+
+/* By id */
