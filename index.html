@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main class="card">
+    <main class="card" id="auth-section">
       <nav>
         <button id="tab-register" class="active">
           Neue Buchhaltung erstellen
         </button>
-        <button id="tab-login">Login</button>
+        <button id="tab-login">
+          <!-- br -->
+          Bestehende Buchhaltung verwenden
+        </button>
       </nav>
 
       <form id="form-register" class="active">
@@ -30,6 +33,58 @@
         <input id="password_login" type="password" required />
         <button class="submit" type="submit">Login</button>
       </form>
+    </main>
+
+    <main id="app-section" class="hidden">
+      <header>
+        <h2>Club Accounting</h2>
+        <button id="logout-btn">Logout</button>
+      </header>
+
+      <nav class="app-tabs">
+        <button id="tab-accounts" class="active">Kontenplan</button>
+        <button id="tab-bookings">Buchungsjournal</button>
+      </nav>
+
+      <section id="accounts-view" class="tab-content active">
+        <h3>Kontenplan</h3>
+        <table id="accounts-table">
+          <thead>
+            <tr>
+              <th>Nummer</th>
+              <th>Name</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="actions">
+          <button id="add-account">+ Konto hinzufügen</button>
+          <button id="save-accounts">💾 Speichern</button>
+        </div>
+      </section>
+
+      <section id="bookings-view" class="tab-content hidden">
+        <h3>Buchungsjournal</h3>
+        <table id="bookings-table">
+          <thead>
+            <tr>
+              <th>Nr</th>
+              <th>Datum</th>
+              <th>Text</th>
+              <th>Soll</th>
+              <th>Haben</th>
+              <th>Betrag</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="actions">
+          <button id="add-booking">+ Buchung hinzufügen</button>
+          <button id="save-bookings">💾 Speichern</button>
+        </div>
+      </section>
     </main>
 
     <script src="script.js"></script>

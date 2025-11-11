@@ -6,11 +6,10 @@
 /* By tag */
 
 body {
-  font-family: system-ui, sans-serif;
-  background: #f5f6fa;
+  font-family: sans-serif;
+  background: #f5f5f5;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
   padding: 2rem;
 }
 
@@ -60,6 +59,19 @@ nav button.active {
   color: white;
 }
 
+button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: #0077cc;
+  color: white;
+}
+
+button:hover {
+  background: #005fa3;
+}
+
 button.submit {
   background: #007bff;
   color: white;
@@ -74,16 +86,65 @@ button.submit:hover {
   background: #004fd6;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+td input {
+  width: 95%;
+  border: none;
+  background: transparent;
+}
+
+tr.modified td input {
+  font-weight: bold;
+  color: #0077cc;
+}
+
+tr.new td input {
+  background: #e8f7e8;
+}
+
+tr.deleted {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
 /* By class */
+
+.hidden {
+  display: none;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.app-tabs {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.app-tabs button.active {
+  background: #005fa3;
+}
 
 .card {
   background: white;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .toast {
@@ -111,11 +172,22 @@ button.submit:hover {
 .toast.success {
   background: #28a745;
 }
+
 .toast.error {
   background: #dc3545;
 }
+
 .toast.info {
   background: #333;
 }
 
 /* By id */
+
+#app-section {
+  width: 1400px;
+  margin: 0 auto;
+  border: 2px solid #ccc;
+  border-radius: 1rem;
+  padding: 1rem;
+  background: white;
+}
