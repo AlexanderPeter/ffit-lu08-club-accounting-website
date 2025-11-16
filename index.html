@@ -3,75 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Club Accounting</title>
+    <title>Vereinsbuchhaltung</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="card" id="auth-section">
       <nav>
-        <button id="tab-register" class="active">
+        <button id="tab-register">
+          <!-- br -->
           Neue Buchhaltung erstellen
         </button>
-        <button id="tab-login">
+        <button id="tab-login" class="active">
           <!-- br -->
           Bestehende Buchhaltung verwenden
         </button>
       </nav>
 
-      <form id="form-register" class="active">
+      <form id="form-register">
         <label>Projektname:</label>
         <input id="project_name_register" required />
         <label>Passwort:</label>
         <input id="password_register" type="password" required />
-        <button class="submit" type="submit">Erstellen</button>
+        <button class="submit" type="submit">➕ Erstellen</button>
       </form>
 
-      <form id="form-login">
+      <form id="form-login" class="active">
         <label>Projektname:</label>
         <input id="project_name_login" required />
         <label>Passwort:</label>
         <input id="password_login" type="password" required />
-        <button class="submit" type="submit">Login</button>
+        <button class="submit" type="submit">➜] Login</button>
       </form>
     </main>
 
-    <main id="app-section" class="hidden">
+    <main id="app-section" class="card hidden">
       <header>
-        <h2>Club Accounting</h2>
-        <button id="logout-btn">Logout</button>
+        <h1>Vereinsbuchhaltung</h1>
+        <button id="logout-btn">[➜ Logout</button>
       </header>
 
-      <nav class="app-tabs">
-        <button id="tab-accounts" class="active">Kontenplan</button>
-        <button id="tab-bookings">Buchungsjournal</button>
+      <nav>
+        <button id="tab-accounts" class="active">1️⃣ Kontenplan</button>
+        <button id="tab-bookings">2️⃣ Buchungsjournal</button>
       </nav>
 
       <section id="accounts-view" class="tab-content active">
-        <h3>Kontenplan</h3>
+        <h2>Kontenplan</h2>
+        <div class="actions">
+          <button id="add-account">➕ Zeile hinzufügen</button>
+          <button id="save-accounts">💾 Änderungen speichern</button>
+        </div>
         <table id="accounts-table">
           <thead>
             <tr>
               <th>Nummer</th>
-              <th>Name</th>
+              <th class="wide">Name</th>
               <th>Aktionen</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
-        <div class="actions">
-          <button id="add-account">+ Konto hinzufügen</button>
-          <button id="save-accounts">💾 Speichern</button>
-        </div>
       </section>
 
       <section id="bookings-view" class="tab-content hidden">
-        <h3>Buchungsjournal</h3>
+        <h2>Buchungsjournal</h2>
+        <div class="actions">
+          <button id="add-booking">➕ Zeile hinzufügen</button>
+          <button id="save-bookings">💾 Änderungen speichern</button>
+        </div>
         <table id="bookings-table">
           <thead>
             <tr>
-              <th>Nr</th>
+              <th>Nummer</th>
               <th>Datum</th>
-              <th>Text</th>
+              <th class="wide">Text</th>
               <th>Soll</th>
               <th>Haben</th>
               <th>Betrag</th>
@@ -80,13 +85,8 @@
           </thead>
           <tbody></tbody>
         </table>
-        <div class="actions">
-          <button id="add-booking">+ Buchung hinzufügen</button>
-          <button id="save-bookings">💾 Speichern</button>
-        </div>
       </section>
     </main>
-
     <script src="script.js"></script>
   </body>
 </html>

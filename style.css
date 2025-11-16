@@ -18,10 +18,65 @@ label {
   margin-top: 1rem;
 }
 
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button,
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  font-family: inherit;
+  font-size: 1rem;
+  min-width: 4em;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  appearance: none;
+}
+
+button {
+  background: #0077cc;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+  width: 100%;
+  min-width: 10em;
+}
+
+select {
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"><path fill="%23333" d="M1 1l5 5 5-5"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.6rem;
+  padding-right: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
 input {
   padding: 0.5rem;
   border: 1px solid #ccc;
-  border-radius: 0.3rem;
+  border-radius: 0.5rem;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #0077cc;
+  box-shadow: 0 0 0 2px rgba(0, 119, 204, 0.2);
 }
 
 form {
@@ -37,15 +92,16 @@ form.active {
 nav {
   display: flex;
   margin-bottom: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
 nav button {
   flex: 1;
   padding: 0.75rem;
-  border: none;
   background: #eee;
   color: #333;
-  cursor: pointer;
   font-weight: 600;
   transition: background 0.2s, color 0.2s;
 }
@@ -55,16 +111,7 @@ nav button:hover {
 }
 
 nav button.active {
-  background: #333;
-  color: white;
-}
-
-button {
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
-  background: #0077cc;
+  background: #005fa3;
   color: white;
 }
 
@@ -74,11 +121,6 @@ button:hover {
 
 button.submit {
   background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.6rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
   transition: background 0.2s;
 }
 
@@ -88,28 +130,37 @@ button.submit:hover {
 
 table {
   width: 100%;
+  table-layout: auto;
   border-collapse: collapse;
   margin-top: 1rem;
 }
 
+th {
+  text-align: left;
+}
+
 th,
 td {
+  text-align: left;
+  white-space: nowrap;
   padding: 0.5rem;
   border-bottom: 1px solid #ddd;
 }
 
-td input {
-  width: 95%;
-  border: none;
-  background: transparent;
+th.wide,
+td.wide {
+  width: 100%;
+  white-space: normal;
 }
 
-tr.modified td input {
+tr.modified td input,
+tr.modified td select {
   font-weight: bold;
   color: #0077cc;
 }
 
-tr.new td input {
+tr.new td input,
+tr.new td select {
   background: #e8f7e8;
 }
 
@@ -128,16 +179,8 @@ tr.deleted {
   margin-top: 1rem;
   display: flex;
   gap: 1rem;
-}
-
-.app-tabs {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1rem;
-}
-
-.app-tabs button.active {
-  background: #005fa3;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
 }
 
 .card {
@@ -187,7 +230,4 @@ tr.deleted {
   width: 1400px;
   margin: 0 auto;
   border: 2px solid #ccc;
-  border-radius: 1rem;
-  padding: 1rem;
-  background: white;
 }

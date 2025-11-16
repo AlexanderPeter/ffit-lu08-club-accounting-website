@@ -85,7 +85,7 @@ function switchAuthTab(tab) {
 }
 
 function switchAppTab(tab) {
-  document.querySelectorAll(".app-tabs button").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
   document.getElementById(`tab-${tab}`).classList.add("active");
   document.getElementById(`${tab}-view`).classList.remove("hidden");
@@ -169,7 +169,7 @@ class EditableTable {
 
       const tdAction = document.createElement("td");
       const delBtn = document.createElement("button");
-      delBtn.textContent = "🗑";
+      delBtn.textContent = "🗑️";
       delBtn.onclick = () => this.toggleDelete(i);
       tdAction.appendChild(delBtn);
       tr.appendChild(tdAction);
