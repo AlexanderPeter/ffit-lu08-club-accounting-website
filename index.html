@@ -45,6 +45,8 @@
       <nav>
         <button id="tab-accounts" class="active">1️⃣ Kontenplan</button>
         <button id="tab-bookings">2️⃣ Buchungsjournal</button>
+        <button id="tab-statement">3️⃣ Erfolgsrechnung</button>
+        <button id="tab-balances">4️⃣ Bilanz</button>
       </nav>
 
       <section id="accounts-view" class="tab-content active">
@@ -84,6 +86,67 @@
             </tr>
           </thead>
           <tbody></tbody>
+        </table>
+      </section>
+
+      <section id="statement-view" class="tab-content hidden">
+        <h2>Erfolgsrechnung</h2>
+
+        <div class="actions">
+          <!-- <label for="statement-from">Von:</label>
+          <input type="date" id="statement-from" /> -->
+
+          <label for="statement-to">Bis:</label>
+          <input type="date" id="statement-to" />
+        </div>
+
+        <table id="statement-table" class="balance-table">
+          <thead>
+            <tr>
+              <th>Aufwand</th>
+              <th>Betrag</th>
+              <th>Ertrag</th>
+              <th>Betrag</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td><strong>Gewinn/Verlust</strong></td>
+              <td id="profit-sum"><strong>0.00</strong></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section id="balances-view" class="tab-content hidden">
+        <h2>Bilanz</h2>
+
+        <div class="actions">
+          <label for="balance-date">Stichtag:</label>
+          <input type="date" id="balance-date" />
+        </div>
+
+        <table id="balance-table" class="balance-table">
+          <thead>
+            <tr>
+              <th>Aktiva</th>
+              <th>Betrag</th>
+              <th>Passiva</th>
+              <th>Betrag</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td><strong>Bilanzsumme Aktiva:</strong></td>
+              <td id="assets-sum"><strong>0.00</strong></td>
+              <td><strong>Bilanzsumme Passiva:</strong></td>
+              <td id="liabilities-sum"><strong>0.00</strong></td>
+            </tr>
+          </tfoot>
         </table>
       </section>
     </main>

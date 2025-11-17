@@ -44,6 +44,7 @@ async function register(project, password) {
 }
 
 async function getData(path) {
+  console.log(`GET /${path}`);
   const response = await fetch(`${API_BASE}/${path}`, {
     headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
   });
@@ -52,6 +53,7 @@ async function getData(path) {
 }
 
 async function putData(path, payload) {
+  console.log(`PUT /${path}`, payload);
   const response = await fetch(`${API_BASE}/${path}`, {
     method: "PUT",
     headers: {
@@ -114,6 +116,7 @@ class EditableTable {
   }
 
   render() {
+    console.log(`Render EditableTable '${this.apiPath}'`);
     const tbody = this.table.querySelector("tbody");
     tbody.innerHTML = "";
 
@@ -265,6 +268,8 @@ class EditableTable {
 
     this.changed.clear();
     await this.load();
+    renderStatement();
+    renderBalance();
   }
 }
 
@@ -314,6 +319,8 @@ document.getElementById("logout-btn").onclick = () => {
 
 document.getElementById("tab-accounts").onclick = () => switchAppTab("accounts");
 document.getElementById("tab-bookings").onclick = () => switchAppTab("bookings");
+document.getElementById("tab-balances").onclick = () => switchAppTab("balances");
+document.getElementById("tab-statement").onclick = () => switchAppTab("statement");
 
 const accountsTable = new EditableTable({
   apiPath: "accounts",
@@ -332,6 +339,7 @@ const bookingsTable = new EditableTable({
 });
 
 async function initApp() {
+  console.log("Init app");
   authSection.classList.add("hidden");
   appSection.classList.remove("hidden");
 
@@ -364,4 +372,229 @@ async function initApp() {
     });
     bookingsTable.render();
   };
+  renderStatement();
+  renderBalance();
 }
+
+function getProfit(toDate) {
+  if (!toDate) {
+    return 0;
+  }
+
+  const saldo = calculateStatement(toDate);
+
+  let revenue = 0;
+  let expense = 0;
+
+  Object.keys(saldo).forEach(acc => {
+    if (acc.startsWith("4")) {
+      revenue += saldo[acc]
+    } else if (acc.startsWith("3")) {
+      expense += saldo[acc];
+    }
+  });
+
+  return expense - revenue;
+}
+
+
+function calculateStatement(toDate) {
+  if (!toDate) {
+    return {};
+  }
+
+  const balances = {};
+
+  bookingsTable.data.forEach(b => {
+    if (toDate < b.date) {
+      return;
+    }
+
+    const amount = Number(b.amount);
+
+    if (b.debit) {
+      if (!balances[b.debit]) {
+        balances[b.debit] = { debit: 0, credit: 0 };
+      }
+      balances[b.debit].debit += amount;
+    }
+
+    if (b.credit) {
+      if (!balances[b.credit]) {
+        balances[b.credit] = { debit: 0, credit: 0 };
+      }
+      balances[b.credit].credit += amount;
+    }
+  });
+
+  const saldo = {};
+
+  Object.keys(balances).forEach(acc => {
+    const d = balances[acc].debit;
+    const c = balances[acc].credit;
+
+    if (acc.startsWith("4")) {
+      saldo[acc] = d - c;
+    } else if (acc.startsWith("3")) {
+      saldo[acc] = c - d;
+    }
+  });
+
+  return saldo;
+}
+
+function renderStatement() {
+  console.log("Render statement");
+
+  const accounts = accountsTable.data;
+  // const from = document.getElementById("statement-from").value;
+  const to = document.getElementById("statement-to").value;
+
+  const saldo = calculateStatement(to);
+
+  const tbody = document.querySelector("#statement-table tbody");
+  tbody.innerHTML = "";
+
+  const expense = accounts.filter(a => a.number.toString().startsWith("4"));
+  const revenue = accounts.filter(a => a.number.toString().startsWith("3"));
+
+  const maxRows = Math.max(expense.length, revenue.length);
+
+  let sumExpense = 0;
+  let sumRevenue = 0;
+
+  for (let i = 0; i < maxRows; i++) {
+    const aw = expense[i];
+    const er = revenue[i];
+
+    const awAmount = aw ? (saldo[aw.number] || 0) : "";
+    const erAmount = er ? (saldo[er.number] || 0) : "";
+
+    if (awAmount && !isNaN(awAmount)) sumExpense += awAmount;
+    if (erAmount && !isNaN(erAmount)) sumRevenue += erAmount;
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${aw ? aw.number + " – " + aw.name : ""}</td>
+        <td>${awAmount !== "" ? awAmount.toFixed(2) : ""}</td>
+        <td>${er ? er.number + " – " + er.name : ""}</td>
+        <td>${erAmount !== "" ? erAmount.toFixed(2) : ""}</td>
+      </tr>
+    `;
+  }
+  const profitSum = sumRevenue - sumExpense;
+
+  document.getElementById("profit-sum").innerHTML = `<strong>${profitSum.toFixed(2)}</strong>`;
+}
+
+// document.getElementById("statement-from").addEventListener("change", renderStatement);
+document.getElementById("statement-to").addEventListener("change", renderStatement);
+
+function calculateBalances(dateLimit) {
+  if (!dateLimit) {
+    return {};
+  }
+
+  const balances = {};
+
+  bookingsTable.data.forEach(b => {
+    if (b.date > dateLimit) {
+      return;
+    };
+    const amount = Number(b.amount);
+
+    if (b.debit) {
+      if (!balances[b.debit]) {
+        balances[b.debit] = { debit: 0, credit: 0 };
+      }
+      balances[b.debit].debit += amount;
+    }
+
+    if (b.credit) {
+      if (!balances[b.credit]) {
+        balances[b.credit] = { debit: 0, credit: 0 };
+      }
+      balances[b.credit].credit += amount;
+    }
+  });
+
+  const saldo = {};
+
+  Object.keys(balances).forEach(acc => {
+    const d = balances[acc].debit;
+    const c = balances[acc].credit;
+
+    if (acc.startsWith("1")) {
+      saldo[acc] = d - c;
+    } else if (acc.startsWith("2")) {
+      saldo[acc] = c - d;
+    }
+  });
+
+  return saldo;
+}
+
+function renderBalance() {
+  console.log("Render balance");
+  const accounts = accountsTable.data;
+  const dateInput = document.getElementById("balance-date").value;
+  const saldo = calculateBalances(dateInput);
+  const tbody = document.querySelector("#balance-table tbody");
+  tbody.innerHTML = "";
+
+  const assetsAccounts = accounts.filter(a => a.number.toString().startsWith("1"));
+  const liabilitiesAccounts = accounts.filter(a => a.number.toString().startsWith("2"));
+
+  const maxRows = Math.max(assetsAccounts.length, liabilitiesAccounts.length);
+
+  let assetsSum = 0;
+  let liabilitiesSum = 0;
+
+  for (let i = 0; i < maxRows; i++) {
+    const assAcc = assetsAccounts[i];
+    const liaAcc = liabilitiesAccounts[i];
+
+    const assAccAmount = assAcc ? (saldo[assAcc.number] || 0) : "";
+    const liaAccAmount = liaAcc ? (saldo[liaAcc.number] || 0) : "";
+
+    if (assAccAmount && !isNaN(assAccAmount)) assetsSum += assAccAmount;
+    if (liaAccAmount && !isNaN(liaAccAmount)) liabilitiesSum += liaAccAmount;
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${assAcc ? assAcc.number + " – " + assAcc.name : ""}</td>
+        <td>${assAccAmount !== "" ? assAccAmount.toFixed(2) : ""}</td>
+        <td>${liaAcc ? liaAcc.number + " – " + liaAcc.name : ""}</td>
+        <td>${liaAccAmount !== "" ? liaAccAmount.toFixed(2) : ""}</td>
+      </tr>
+    `;
+  }
+
+  const profit = getProfit(dateInput);
+  tbody.innerHTML += `
+    <tr>
+      <td></td>
+      <td></td>
+      <td>Gewinn/Verlust</td>
+      <td>${profit.toFixed(2)}</td>
+    </tr>
+  `;
+
+  liabilitiesSum += profit;
+
+  const assetsSumEl = document.getElementById("assets-sum");
+  assetsSumEl.innerHTML = `<strong>${assetsSum.toFixed(2)}</strong>`;
+
+  const liabilitiesSumEl = document.getElementById("liabilities-sum");
+  liabilitiesSumEl.innerHTML = `<strong>${liabilitiesSum.toFixed(2)}</strong>`;
+
+  if (0.0001 < Math.abs(assetsSum - liabilitiesSum)) {
+    assetsSumEl.classList.add("red");
+    liabilitiesSumEl.classList.add("red");
+  } else {
+    assetsSumEl.classList.remove("red");
+    liabilitiesSumEl.classList.remove("red");
+  }
+}
+
+document.getElementById("balance-date").addEventListener("change", renderBalance);

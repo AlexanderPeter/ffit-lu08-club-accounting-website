@@ -176,11 +176,17 @@ tr.deleted {
 }
 
 .actions {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-  margin-top: 0.5rem;
+  align-items: center;
+}
+
+.actions input[type="date"] {
+  width: 6.5em;
+  margin-right: 1em;
 }
 
 .card {
@@ -222,6 +228,28 @@ tr.deleted {
 
 .toast.info {
   background: #333;
+}
+
+.balance-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.balance-table th,
+.balance-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  width: 25%;
+}
+
+.balance-table th {
+  background: #eee;
+}
+
+.red {
+  color: red;
+  font-weight: bold;
 }
 
 /* By id */
