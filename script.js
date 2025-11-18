@@ -1,6 +1,6 @@
 // api.js
 
-const API_BASE = "https://localhost:8443";
+let API_BASE = "https://localhost:8443";
 
 async function login(project, password) {
   const payload = { project_name: project, password };
@@ -46,7 +46,10 @@ async function register(project, password) {
 async function getData(path) {
   console.log(`GET /${path}`);
   const response = await fetch(`${API_BASE}/${path}`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+    headers: {
+      "ngrok-skip-browser-warning": "1995",
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`
+    },
   });
   if (!response.ok) throw new Error(`Fehler beim Laden: ${path}`);
   return await response.json();
@@ -598,3 +601,8 @@ function renderBalance() {
 }
 
 document.getElementById("balance-date").addEventListener("change", renderBalance);
+
+document.getElementById("api-base-input").addEventListener("change", (e) => {
+  API_BASE = e.target.value.trim();
+  console.log("Backend changed to:", API_BASE);
+});

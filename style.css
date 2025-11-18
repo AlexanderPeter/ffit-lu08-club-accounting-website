@@ -259,3 +259,21 @@ tr.deleted {
   margin: 0 auto;
   border: 2px solid #ccc;
 }
+
+#api-config {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: white;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  z-index: 9999;
+}
+
+#api-config input {
+  width: 32em;
+}
