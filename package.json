@@ -1,6 +1,10 @@
 {
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "10.0.3",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "^17.4.0",
+    "jsdom": "^28.1.0",
     "prettier": "3.8.1",
     "vitest": "4.0.18"
   },
@@ -9,8 +13,8 @@
     "format-check": "prettier --check .",
     "lint": "eslint . --fix",
     "lint-check": "eslint .",
-    "test": "jest",
-    "test-coverage": "jest --coverage",
+    "test": "vitest",
+    "test-coverage": "vitest run --coverage",
     "tsc": "tsc"
   }
 }

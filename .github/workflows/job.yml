@@ -1,0 +1,33 @@
+name: Build frontend
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  job_build_javascript:
+    name: Build typescript code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prettier check
+        run: npm run format-check
+
+      - name: Run ESLint check
+        run: npm run lint-check
+
+      - name: Run tests
+        run: npm run test-coverage

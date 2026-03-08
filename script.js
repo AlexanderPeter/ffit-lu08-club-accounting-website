@@ -70,7 +70,7 @@ async function putData(path, payload) {
 
 // ui.js
 
-function showToast(message, type = 'info') {
+export function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.textContent = message;
   toast.className = `toast ${type}`;
@@ -276,126 +276,8 @@ class EditableTable {
 
 // main.js
 
-const authSection = document.getElementById('auth-section');
-const appSection = document.getElementById('app-section');
-
-document.getElementById('tab-login').onclick = () => switchAuthTab('login');
-document.getElementById('tab-register').onclick = () => switchAuthTab('register');
-
-document.getElementById('form-login').onsubmit = async (e) => {
-  e.preventDefault();
-  const project = document.getElementById('project_name_login').value;
-  const password = document.getElementById('password_login').value;
-  try {
-    await login(project, password);
-    await initApp();
-  } catch (err) {
-    showToast(err.message, 'error');
-  }
-};
-
-document.getElementById('form-register').onsubmit = async (e) => {
-  e.preventDefault();
-  const project = document.getElementById('project_name_register').value;
-  const password = document.getElementById('password_register').value;
-  try {
-    const status = await register(project, password);
-    if (status) {
-      showToast('✅ Projekt erfolgreich erstellt!', 'success');
-      switchAuthTab('login');
-    } else {
-      showToast('❌ Projekt kann nicht erstellt werden', 'error');
-    }
-  } catch (err) {
-    showToast(err.message, 'error');
-  }
-};
-
-document.getElementById('logout-btn').onclick = () => {
-  localStorage.removeItem('access_token');
-  appSection.classList.add('hidden');
-  authSection.classList.remove('hidden');
-};
-
-document.getElementById('tab-accounts').onclick = () => switchAppTab('accounts');
-document.getElementById('tab-bookings').onclick = () => switchAppTab('bookings');
-document.getElementById('tab-balances').onclick = () => switchAppTab('balances');
-document.getElementById('tab-statement').onclick = () => switchAppTab('statement');
-
-const accountsTable = new EditableTable({
-  apiPath: 'accounts',
-  table: document.getElementById('accounts-table'),
-  addBtn: document.getElementById('add-account'),
-  saveBtn: document.getElementById('save-accounts'),
-  columns: ['number', 'name'],
-});
-
-const bookingsTable = new EditableTable({
-  apiPath: 'bookings',
-  table: document.getElementById('bookings-table'),
-  addBtn: document.getElementById('add-booking'),
-  saveBtn: document.getElementById('save-bookings'),
-  columns: ['number', 'date', 'text', 'debit', 'credit', 'amount'],
-});
-
-async function initApp() {
-  console.log('Init app');
-  authSection.classList.add('hidden');
-  appSection.classList.remove('hidden');
-
-  await accountsTable.load();
-  const accountOptions = accountsTable.data.map((a) => ({
-    value: a.number,
-    label: `${a.number} – ${a.name}`,
-  }));
-
-  bookingsTable.accountOptions = accountOptions;
-  await bookingsTable.load();
-
-  const originalSave = accountsTable.save.bind(accountsTable);
-  accountsTable.save = async () => {
-    await originalSave();
-    const updatedAccounts = accountsTable.data.map((a) => ({
-      value: a.number,
-      label: `${a.number} – ${a.name}`,
-    }));
-    bookingsTable.accountOptions = updatedAccounts;
-    bookingsTable.data.forEach((b, i) => {
-      if (!updatedAccounts.some((acc) => acc.value == b.debit)) {
-        b.debit = null;
-        bookingsTable.changed.add(i);
-      }
-      if (!updatedAccounts.some((acc) => acc.value == b.credit)) {
-        b.credit = null;
-        bookingsTable.changed.add(i);
-      }
-    });
-    bookingsTable.render();
-  };
-  renderStatement();
-  renderBalance();
-}
-
-function getProfit(toDate) {
-  if (!toDate) {
-    return 0;
-  }
-
-  const saldo = calculateStatement(toDate);
-
-  let revenue = 0;
-  let expense = 0;
-
-  Object.keys(saldo).forEach((acc) => {
-    if (acc.startsWith('4')) {
-      revenue += saldo[acc];
-    } else if (acc.startsWith('3')) {
-      expense += saldo[acc];
-    }
-  });
-
-  return expense - revenue;
-}
+let accountsTable = undefined;
+let bookingsTable = undefined;
 
 function calculateStatement(toDate) {
   if (!toDate) {
@@ -486,9 +368,6 @@ function renderStatement() {
   document.getElementById('profit-sum').innerHTML = `<strong>${profitSum.toFixed(2)}</strong>`;
 }
 
-// document.getElementById("statement-from").addEventListener("change", renderStatement);
-document.getElementById('statement-to').addEventListener('change', renderStatement);
-
 function calculateBalances(dateLimit) {
   if (!dateLimit) {
     return {};
@@ -531,6 +410,27 @@ function calculateBalances(dateLimit) {
   });
 
   return saldo;
+}
+
+function getProfit(toDate) {
+  if (!toDate) {
+    return 0;
+  }
+
+  const saldo = calculateStatement(toDate);
+
+  let revenue = 0;
+  let expense = 0;
+
+  Object.keys(saldo).forEach((acc) => {
+    if (acc.startsWith('4')) {
+      revenue += saldo[acc];
+    } else if (acc.startsWith('3')) {
+      expense += saldo[acc];
+    }
+  });
+
+  return expense - revenue;
 }
 
 function renderBalance() {
@@ -596,9 +496,120 @@ function renderBalance() {
   }
 }
 
-document.getElementById('balance-date').addEventListener('change', renderBalance);
+// init
 
-document.getElementById('api-base-input').addEventListener('change', (e) => {
-  API_BASE = e.target.value.trim();
-  console.log('Backend changed to:', API_BASE);
-});
+export function init() {
+  const authSection = document.getElementById('auth-section');
+  const appSection = document.getElementById('app-section');
+
+  document.getElementById('tab-login').onclick = () => switchAuthTab('login');
+  document.getElementById('tab-register').onclick = () => switchAuthTab('register');
+
+  document.getElementById('form-login').onsubmit = async (e) => {
+    e.preventDefault();
+    const project = document.getElementById('project_name_login').value;
+    const password = document.getElementById('password_login').value;
+    try {
+      await login(project, password);
+      await initApp();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
+  document.getElementById('form-register').onsubmit = async (e) => {
+    e.preventDefault();
+    const project = document.getElementById('project_name_register').value;
+    const password = document.getElementById('password_register').value;
+    try {
+      const status = await register(project, password);
+      if (status) {
+        showToast('✅ Projekt erfolgreich erstellt!', 'success');
+        switchAuthTab('login');
+      } else {
+        showToast('❌ Projekt kann nicht erstellt werden', 'error');
+      }
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
+  document.getElementById('tab-accounts').onclick = () => switchAppTab('accounts');
+  document.getElementById('tab-bookings').onclick = () => switchAppTab('bookings');
+  document.getElementById('tab-balances').onclick = () => switchAppTab('balances');
+  document.getElementById('tab-statement').onclick = () => switchAppTab('statement');
+
+  document.getElementById('logout-btn').onclick = () => {
+    localStorage.removeItem('access_token');
+    appSection.classList.add('hidden');
+    authSection.classList.remove('hidden');
+  };
+
+  // document.getElementById("statement-from").addEventListener("change", renderStatement);
+  document.getElementById('statement-to').addEventListener('change', renderStatement);
+
+  document.getElementById('balance-date').addEventListener('change', renderBalance);
+
+  document.getElementById('api-base-input').addEventListener('change', (e) => {
+    API_BASE = e.target.value.trim();
+    console.log('Backend changed to:', API_BASE);
+  });
+
+  accountsTable = new EditableTable({
+    apiPath: 'accounts',
+    table: document.getElementById('accounts-table'),
+    addBtn: document.getElementById('add-account'),
+    saveBtn: document.getElementById('save-accounts'),
+    columns: ['number', 'name'],
+  });
+
+  bookingsTable = new EditableTable({
+    apiPath: 'bookings',
+    table: document.getElementById('bookings-table'),
+    addBtn: document.getElementById('add-booking'),
+    saveBtn: document.getElementById('save-bookings'),
+    columns: ['number', 'date', 'text', 'debit', 'credit', 'amount'],
+  });
+
+  async function initApp() {
+    console.log('Init app');
+    authSection.classList.add('hidden');
+    appSection.classList.remove('hidden');
+
+    await accountsTable.load();
+    const accountOptions = accountsTable.data.map((a) => ({
+      value: a.number,
+      label: `${a.number} – ${a.name}`,
+    }));
+
+    bookingsTable.accountOptions = accountOptions;
+    await bookingsTable.load();
+
+    const originalSave = accountsTable.save.bind(accountsTable);
+    accountsTable.save = async () => {
+      await originalSave();
+      const updatedAccounts = accountsTable.data.map((a) => ({
+        value: a.number,
+        label: `${a.number} – ${a.name}`,
+      }));
+      bookingsTable.accountOptions = updatedAccounts;
+      bookingsTable.data.forEach((b, i) => {
+        if (!updatedAccounts.some((acc) => acc.value == b.debit)) {
+          b.debit = null;
+          bookingsTable.changed.add(i);
+        }
+        if (!updatedAccounts.some((acc) => acc.value == b.credit)) {
+          b.credit = null;
+          bookingsTable.changed.add(i);
+        }
+      });
+      bookingsTable.render();
+    };
+    renderStatement();
+    renderBalance();
+  }
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', init);
+}
