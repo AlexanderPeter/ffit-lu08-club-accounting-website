@@ -25,9 +25,9 @@ header {
 }
 
 button,
-input[type="text"],
-input[type="number"],
-input[type="date"],
+input[type='text'],
+input[type='number'],
+input[type='date'],
 select {
   font-family: inherit;
   font-size: 1rem;
@@ -45,9 +45,9 @@ button {
   cursor: pointer;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
+input[type='text'],
+input[type='number'],
+input[type='date'],
 select {
   background-color: #fff;
   border: 1px solid #ccc;
@@ -103,7 +103,9 @@ nav button {
   background: #eee;
   color: #333;
   font-weight: 600;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 nav button:hover {
@@ -184,7 +186,7 @@ tr.deleted {
   align-items: center;
 }
 
-.actions input[type="date"] {
+.actions input[type='date'] {
   width: 6.5em;
   margin-right: 1em;
 }
@@ -206,7 +208,9 @@ tr.deleted {
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
   z-index: 9999;
   pointer-events: none;
   max-width: 90%;

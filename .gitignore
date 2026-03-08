@@ -4,3 +4,6 @@
 
 # === VS Code ===
 .vscode/
+
+# === Dependencies ===
+node_modules/
