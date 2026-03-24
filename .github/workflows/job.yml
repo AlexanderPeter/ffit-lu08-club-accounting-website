@@ -6,7 +6,7 @@ on:
 
 jobs:
   job_build_javascript:
-    name: Build typescript code
+    name: Build javascript code
     runs-on: ubuntu-latest
 
     steps:

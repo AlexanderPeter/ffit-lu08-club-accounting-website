@@ -6,9 +6,12 @@
     "globals": "^17.4.0",
     "jsdom": "^28.1.0",
     "prettier": "3.8.1",
+    "testcafe": "^3.7.2",
     "vitest": "4.0.18"
   },
   "scripts": {
+    "e2e": "testcafe chrome e2e --client-logs --reporter spec --screenshots-on-fails --screenshots ./e2e/screenshots",
+    "e2e-headless": "testcafe chrome:headless e2e --client-logs --reporter spec --screenshots-on-fails --screenshots ./e2e/screenshots",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint . --fix",
